@@ -306,10 +306,10 @@ def fetch_rss():
     jobs = []
 
     for url, source in feeds:
-        try:
-            jobs.extend(parse_rss(http_get(url), source))
-        except Exception as e:
-            log.error(f"{source}: {e}")
+    	try:
+        	jobs.extend(parse_rss(http_get(url), source))
+    	except Exception as e:
+        l	og.error(f"RSS error in {source}: {e}")
 
     return jobs
 
