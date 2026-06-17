@@ -642,6 +642,7 @@ def main():
     jobs = filter_jobs(raw, seen)
 
     log.info(f"Found {len(jobs)} matching jobs")
+    log.info("HOLA J1")
 
     log.info("=== JOBS FOUND ===")
 
