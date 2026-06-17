@@ -298,9 +298,11 @@ def fetch_jobicy():
         return []
 
 def fetch_rss():
-
     feeds = [
         ("https://remotive.com/remote-jobs/qa/feed", "Remotive RSS"),
+        ("https://weworkremotely.com/categories/remote-programming-jobs.rss", "WeWorkRemotely"),
+        ("https://weworkremotely.com/categories/remote-devops-sysadmin-jobs.rss", "WeWorkRemotely"),
+        ("https://jobicy.com/feed/remote-jobs", "Jobicy RSS"),
     ]
 
     jobs = []
