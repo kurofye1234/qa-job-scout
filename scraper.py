@@ -205,12 +205,14 @@ def ok_title(title):
     )
 
 def ok_location(location, desc):
-    text = f"{location} {desc}".lower()
-    # Hard blocklist — specific countries not relevant
-    if any(x in text for x in LOCATION_BLOCKLIST):
+    loc = (location or "").lower()
+    desc_lower = (desc or "").lower()
+    # Blocklist only against location field — not description
+    if any(x in loc for x in LOCATION_BLOCKLIST):
         return False
-    # Explicit exclusions
-    if any(x in text for x in LOCATION_EXCLUDE):
+    # Hard exclusions check both
+    combined = f"{loc} {desc_lower}"
+    if any(x in combined for x in LOCATION_EXCLUDE):
         return False
     return True
 
@@ -538,7 +540,10 @@ def send_email(jobs, run_date):
     msg.attach(MIMEText(build_html(jobs, run_date), "html"))
     try:
         log.info("Connecting to Gmail SMTP...")
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as s:
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as s:
+            s.ehlo()
+            s.starttls()
+            s.ehlo()
             s.login(GMAIL_USER, GMAIL_PASSWORD)
             s.sendmail(GMAIL_USER, NOTIFY_EMAIL, msg.as_string())
         log.info(f"✓ Email sent to {NOTIFY_EMAIL}")
