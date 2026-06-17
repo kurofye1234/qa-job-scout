@@ -36,6 +36,7 @@ GMAIL_USER     = os.getenv("GMAIL_USER", "")
 GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD", "")
 NOTIFY_EMAIL   = os.getenv("NOTIFY_EMAIL", "")
 SEEN_FILE      = Path(os.getenv("SEEN_FILE", "/tmp/seen_jobs.json"))
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", "")
 
 MIN_HOURLY  = 20
 MIN_MONTHLY = 3500
@@ -528,25 +529,29 @@ def build_html(jobs, run_date):
 
 def send_email(jobs, run_date):
     log.info(f"GMAIL_USER set: {'YES' if GMAIL_USER else 'NO'}")
-    log.info(f"GMAIL_PASSWORD set: {'YES' if GMAIL_PASSWORD else 'NO'}")
+    log.info(f"SENDGRID_API_KEY set: {'YES' if SENDGRID_API_KEY else 'NO'}")
     log.info(f"NOTIFY_EMAIL set: {'YES' if NOTIFY_EMAIL else 'NO'}")
-    if not (GMAIL_USER and GMAIL_PASSWORD and NOTIFY_EMAIL):
+    if not (SENDGRID_API_KEY and NOTIFY_EMAIL):
         log.warning("Missing credentials — skipping email.")
         return
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"🚀 QA Scout: {len(jobs)} job(s) — {run_date}"
-    msg["From"]    = GMAIL_USER
-    msg["To"]      = NOTIFY_EMAIL
-    msg.attach(MIMEText(build_html(jobs, run_date), "html"))
+    data = {
+        "personalizations": [{"to": [{"email": NOTIFY_EMAIL}]}],
+        "from": {"email": GMAIL_USER or "scout@qa-scout.com"},
+        "subject": f"QA Scout: {len(jobs)} job(s) — {run_date}",
+        "content": [{"type": "text/html", "value": build_html(jobs, run_date)}]
+    }
+    req = urllib.request.Request(
+        "https://api.sendgrid.com/v3/mail/send",
+        data=json.dumps(data).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {SENDGRID_API_KEY}",
+            "Content-Type": "application/json"
+        },
+        method="POST"
+    )
     try:
-        log.info("Connecting to Gmail SMTP...")
-        with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as s:
-            s.ehlo()
-            s.starttls()
-            s.ehlo()
-            s.login(GMAIL_USER, GMAIL_PASSWORD)
-            s.sendmail(GMAIL_USER, NOTIFY_EMAIL, msg.as_string())
-        log.info(f"✓ Email sent to {NOTIFY_EMAIL}")
+        with urllib.request.urlopen(req, timeout=15) as r:
+            log.info(f"✓ Email sent — status {r.status}")
     except Exception as e:
         log.error(f"Email failed: {repr(e)}")
 
