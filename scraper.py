@@ -105,6 +105,16 @@ TITLE_EXCLUDE = [
     "backend engineer",
     "data engineer",
     "fullstack"
+    "rater",
+
+    "evaluator",
+    "annotator",
+    "reviewer",
+    "translator",
+    "german",
+    "french",
+    "spanish",
+    "language"
 ]
 
 LOCATION_EXCLUDE = [
@@ -113,6 +123,16 @@ LOCATION_EXCLUDE = [
     "canada only",
     "uk only",
     "security clearance"
+    "germany",
+    "german",
+    "france",
+    "french",
+    "italy",
+    "italian",
+    "spain",
+    "spain only",
+    "europe only",
+    "emea"
 ]
 
 PROFILE_KEYWORDS = {
@@ -311,7 +331,7 @@ def fetch_rss():
         try:
             jobs.extend(parse_rss(http_get(url), source))
         except Exception as e:
-            log.error(f"RSS error in {source}: {e}")
+            log.error(f"load_seen: {e}")
 
     return jobs
 
