@@ -272,6 +272,36 @@ def parse_rss(xml_text, source):
 # SOURCES
 # ------------------------------------------------------------------
 
+
+def fetch_remoteok():
+    try:
+        data = json.loads(
+            http_get("https://remoteok.com/api")
+        )
+
+        jobs = []
+
+        for j in data:
+
+            if not isinstance(j, dict):
+                continue
+
+            jobs.append({
+                "title": j.get("position", ""),
+                "company": j.get("company", ""),
+                "location": j.get("location", "Remote"),
+                "url": j.get("url", ""),
+                "desc": " ".join(j.get("tags", [])),
+                "salary": "",
+                "source": "RemoteOK"
+            })
+
+        return jobs
+
+    except Exception as e:
+        log.error(f"RemoteOK error: {e}")
+        return []
+
 def fetch_remotive():
     try:
         data = json.loads(
@@ -480,7 +510,11 @@ def main():
     r3 = fetch_rss()
     log.info(f"RSS returned {len(r3)} jobs")
 
-    raw = r1 + r2 + r3
+    log.info("Starting RemoteOK...")
+    r4 = fetch_remoteok()
+    log.info(f"RemoteOK returned {len(r4)} jobs")
+
+    raw = r1 + r2 + r3 + r4
 
     log.info("Filtering jobs...")
 
