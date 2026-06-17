@@ -446,33 +446,23 @@ def fetch_rss():
 
     for url, source in feeds:
 
-     try:
+        try:
 
-        log.info(f"Loading RSS: {source}")
+            log.info(f"Loading RSS: {source}")
 
-        rss_jobs = parse_rss(
+            rss_jobs = parse_rss(
+                http_get(url),
+                source
+            )
+            log.info(
+                f"{source} returned {len(rss_jobs)} jobs"
+            )
+            jobs.extend(rss_jobs)
 
-            http_get(url),
-
-            source
-
-        )
-
-        log.info(
-
-            f"{source} returned {len(rss_jobs)} jobs"
-
-        )
-
-        jobs.extend(rss_jobs)
-
-    except Exception as e:
-
-        log.error(
-
-            f"RSS ERROR [{source}]: {repr(e)}"
-
-        )
+        except Exception as e:
+            log.error(
+                f"RSS ERROR [{source}]: {repr(e)}"
+            )
 
     return jobs
 
