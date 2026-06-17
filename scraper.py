@@ -584,6 +584,7 @@ def main():
     save_seen(seen)
 
     log.info("Done ✓")
+    log.info("Hola soy nueva version  ✓")
 
 if __name__ == "__main__":
     main()
