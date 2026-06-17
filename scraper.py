@@ -40,6 +40,8 @@ NOTIFY_EMAIL = os.getenv("NOTIFY_EMAIL", "")
 SEEN_FILE = Path(os.getenv("SEEN_FILE", "/data/seen_jobs.json"))
 
 MIN_HOURLY = 20
+MIN_MONTHLY = 3500
+MIN_YEARLY = 40000
 
 # ------------------------------------------------------------------
 # HTTP
@@ -84,18 +86,23 @@ log = logging.getLogger("qa_scout")
 
 TITLE_INCLUDE = [
     "qa",
-    "qa engineer",
-    "quality engineer",
-    "quality assurance",
-    "quality analyst",
-    "qa analyst",
-    "software test",
-    "software tester",
+    "quality",
     "tester",
+    "testing",
+    "test",
+    "quality assurance",
+    "quality engineer",
+    "qa engineer",
+    "qa analyst",
+    "quality analyst",
     "test engineer",
     "test analyst",
+    "testing engineer",
+    "testing analyst",
+    "software tester",
+    "software testing",
     "manual tester",
-    "manual qa",
+    "application tester",
     "qe"
 ]
 
@@ -403,8 +410,8 @@ def filter_jobs(raw, seen):
             + j.get("desc", "")
         )
 
-        if salary is not None and salary < MIN_HOURLY:
-            continue
+        #if salary is not None and salary < MIN_HOURLY:
+         #   continue
 
         match = calculate_match(
             j.get("title", ""),
