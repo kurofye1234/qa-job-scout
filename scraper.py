@@ -253,7 +253,7 @@ def fetch_remotive():
     try:
         data = json.loads(
             http_get(
-                "https://remotive.com/api/remote-jobs?category=qa"
+                "https://remotive.com/api/remote-jobs?category=qa&limit=100"
             )
         )
 
@@ -350,7 +350,7 @@ def filter_jobs(raw, seen):
             + j.get("desc", "")
         )
 
-        if salary and salary < MIN_HOURLY:
+        if salary is not None and salary < MIN_HOURLY:
             continue
 
         match = calculate_match(
