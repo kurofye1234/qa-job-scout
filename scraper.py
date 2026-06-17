@@ -570,6 +570,9 @@ def main():
         + fetch_rss()
     )
     log.info(f"Total raw jobs: {len(raw)}")
+    
+    for j in raw:
+        log.info(f"RAW TITLE: {j.get('title','')} | LOC: {j.get('location','')}")
 
     jobs = filter_jobs(raw, seen)
     log.info(f"Matched jobs: {len(jobs)}")
