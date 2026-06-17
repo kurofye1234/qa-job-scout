@@ -209,18 +209,91 @@ def ok_location(location, desc):
     return not any(x in text for x in LOCATION_EXCLUDE)
 
 def extract_salary(text):
+
     text = (text or "").lower()
 
-    hourly = re.search(r'(\d{2,3})(?:\.\d+)?\s*(?:/hr|/hour)', text)
-    if hourly:
-        return float(hourly.group(1))
+    # -------------------------
+    # Hourly
+    # -------------------------
 
-    annual = re.search(r'(\d{2,3})k', text)
-    if annual:
-        yearly = float(annual.group(1)) * 1000
-        return round(yearly / 2080, 1)
+    m = re.search(
+        r'\$?(\d{2,3}(?:\.\d+)?)\s*(?:usd\s*)?(?:/hr|/hour|per hour)',
+        text
+    )
+
+    if m:
+        return {
+            "type": "hourly",
+            "amount": float(m.group(1))
+        }
+
+    # -------------------------
+    # Monthly
+    # -------------------------
+
+    m = re.search(
+        r'\$?([\d,]{3,6})\s*(?:usd\s*)?(?:/month|per month|monthly|/mo)',
+        text
+    )
+
+    if m:
+        return {
+            "type": "monthly",
+            "amount": float(
+                m.group(1).replace(",", "")
+            )
+        }
+
+    # -------------------------
+    # Annual (40k, 50k, etc)
+    # -------------------------
+
+    m = re.search(
+        r'(\d{2,3})k',
+        text
+    )
+
+    if m:
+        return {
+            "type": "yearly",
+            "amount": float(m.group(1)) * 1000
+        }
+
+    # -------------------------
+    # Annual ($40,000)
+    # -------------------------
+
+    m = re.search(
+        r'\$?([\d,]{4,7})\s*(?:usd\s*)?(?:year|yearly|annual|annually)',
+        text
+    )
+
+    if m:
+        return {
+            "type": "yearly",
+            "amount": float(
+                m.group(1).replace(",", "")
+            )
+        }
 
     return None
+
+def salary_ok(salary):
+
+    if salary is None:
+        return True
+
+    if salary["type"] == "hourly":
+        return salary["amount"] >= MIN_HOURLY
+
+    if salary["type"] == "monthly":
+        return salary["amount"] >= MIN_MONTHLY
+
+    if salary["type"] == "yearly":
+        return salary["amount"] >= MIN_YEARLY
+
+    return True
+
 
 def calculate_match(title, desc):
     text = f"{title} {desc}".lower()
@@ -410,8 +483,8 @@ def filter_jobs(raw, seen):
             + j.get("desc", "")
         )
 
-        #if salary is not None and salary < MIN_HOURLY:
-         #   continue
+        if not salary_ok(salary):
+    		continue
 
         match = calculate_match(
             j.get("title", ""),
