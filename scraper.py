@@ -344,9 +344,13 @@ def parse_rss(xml_text, source):
             })
 
     except Exception as e:
-        log.error(e)
+        log.error(
 
-    return jobs
+            f"RSS PARSE ERROR [{source}]: {repr(e)}"
+
+        )
+
+        return []
 
 # ------------------------------------------------------------------
 # SOURCES
@@ -441,10 +445,34 @@ def fetch_rss():
     jobs = []
 
     for url, source in feeds:
-        try:
-            jobs.extend(parse_rss(http_get(url), source))
-        except Exception as e:
-            log.error(f"load_seen: {e}")
+
+     try:
+
+        log.info(f"Loading RSS: {source}")
+
+        rss_jobs = parse_rss(
+
+            http_get(url),
+
+            source
+
+        )
+
+        log.info(
+
+            f"{source} returned {len(rss_jobs)} jobs"
+
+        )
+
+        jobs.extend(rss_jobs)
+
+    except Exception as e:
+
+        log.error(
+
+            f"RSS ERROR [{source}]: {repr(e)}"
+
+        )
 
     return jobs
 
