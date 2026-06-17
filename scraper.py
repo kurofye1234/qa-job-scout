@@ -309,7 +309,7 @@ def fetch_rss():
     	try:
         	jobs.extend(parse_rss(http_get(url), source))
     	except Exception as e:
-        l	og.error(f"RSS error in {source}: {e}")
+        	log.error(f"RSS error in {source}: {e}")
 
     return jobs
 
