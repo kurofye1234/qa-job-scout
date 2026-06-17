@@ -459,10 +459,22 @@ def main():
     log.info("Filtering jobs...")
 
     jobs = filter_jobs(raw, seen)
+
     log.info(f"Found {len(jobs)} matching jobs")
 
+    log.info("=== JOBS FOUND ===")
+
+    for job in jobs:
+    	log.info(
+        	f"{job['title']} | "
+        	f"{job['company']} | "
+        	f"{job['url']}"
+         )
+
+# send_email(jobs)
+
     log.info("About to send email...")
-    send_email(jobs)
+    #send_email(jobs)
     log.info("Email completed")
 
     for j in jobs:
