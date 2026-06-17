@@ -398,9 +398,13 @@ def build_html(jobs):
 
 def send_email(jobs):
 
+    log.info("send_email() entered")
+
     if not (GMAIL_USER and GMAIL_PASSWORD and NOTIFY_EMAIL):
-        print("Email disabled")
+        log.info("Email disabled - missing env vars")
         return
+
+    log.info("Creating message")
 
     msg = MIMEMultipart("alternative")
     msg["Subject"] = f"QA Scout - {len(jobs)} jobs"
@@ -409,13 +413,29 @@ def send_email(jobs):
 
     msg.attach(MIMEText(build_html(jobs), "html"))
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
-        s.login(GMAIL_USER, GMAIL_PASSWORD)
-        s.sendmail(
-            GMAIL_USER,
-            NOTIFY_EMAIL,
-            msg.as_string()
-        )
+    try:
+        log.info("Connecting to Gmail SMTP")
+
+        with smtplib.SMTP_SSL(
+            "smtp.gmail.com",
+            465,
+            timeout=15
+        ) as s:
+
+            log.info("Connected")
+            s.login(GMAIL_USER, GMAIL_PASSWORD)
+
+            log.info("Logged in")
+            s.sendmail(
+                GMAIL_USER,
+                NOTIFY_EMAIL,
+                msg.as_string()
+            )
+
+            log.info("Email sent")
+
+    except Exception as e:
+        log.error(f"EMAIL ERROR: {e}")
 
 # ------------------------------------------------------------------
 # MAIN
