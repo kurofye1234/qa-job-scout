@@ -160,7 +160,7 @@ def load_seen():
         if SEEN_FILE.exists():
             return set(json.loads(SEEN_FILE.read_text()))
     except Exception as e:
-    log.error(f"RSS error in {source}: {e}")
+    	log.error(f"RSS error in {source}: {e}")
     return set()
 
 def save_seen(seen):
