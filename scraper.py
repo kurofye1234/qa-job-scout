@@ -284,6 +284,7 @@ def send_email(jobs, run_date):
 def main():
     run_date = datetime.now(timezone.utc).strftime("%B %d, %Y")
     log.info(f"=== QA Job Scout — {run_date} ===")
+    log.info(f"GMAIL_USER configurado: {'SI' if GMAIL_USER else 'NO'}")
     seen = load_seen()
     raw  = fetch_remotive() + fetch_weworkremotely() + fetch_remotive_rss() + fetch_jobicy()
     log.info(f"Total raw: {len(raw)}")
