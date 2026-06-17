@@ -159,8 +159,8 @@ def load_seen():
     try:
         if SEEN_FILE.exists():
             return set(json.loads(SEEN_FILE.read_text()))
-    except Exception:
-        pass
+    except Exception as e:
+    log.error(f"RSS error in {source}: {e}")
     return set()
 
 def save_seen(seen):
@@ -215,7 +215,7 @@ def calculate_match(title, desc):
 
 def compatibility_bar(score):
     blocks = round(score / 10)
-    return "â" * blocks + "â" * (10 - blocks)
+    return "#" * blocks + "#" * (10 - blocks)
 
 # ------------------------------------------------------------------
 # RSS
@@ -298,10 +298,9 @@ def fetch_jobicy():
         return []
 
 def fetch_rss():
+
     feeds = [
         ("https://remotive.com/remote-jobs/qa/feed", "Remotive RSS"),
-        ("https://himalayas.app/jobs/rss", "Himalayas"),
-        ("https://dynamitejobs.com/feed", "DynamiteJobs"),
     ]
 
     jobs = []
@@ -309,8 +308,8 @@ def fetch_rss():
     for url, source in feeds:
         try:
             jobs.extend(parse_rss(http_get(url), source))
-        except Exception:
-            pass
+        except Exception as e:
+            log.error(f"{source}: {e}")
 
     return jobs
 
