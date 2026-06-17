@@ -441,7 +441,9 @@ def main():
     jobs = filter_jobs(raw, seen)
     log.info(f"Found {len(jobs)} matching jobs")
 
+    log.info("About to send email...")
     send_email(jobs)
+    log.info("Email completed")
 
     for j in jobs:
         seen.add(j["id"])
