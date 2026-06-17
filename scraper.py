@@ -505,6 +505,7 @@ def filter_jobs(raw, seen):
             continue
 
         if not ok_title(j.get("title", "")):
+            log.info(f"REJECT TITLE: {j.get('title','')}")
             continue
         log.info(f"PASSED TITLE FILTER: {j.get('title','')}")
 
