@@ -458,7 +458,11 @@ def main():
     log.info(f"RSS returned {len(r3)} jobs")
 
     raw = r1 + r2 + r3
+
     log.info("Filtering jobs...")
+
+    for j in raw:
+    log.info(f"RAW: {j.get('title','')} | {j.get('location','')}")
 
     jobs = filter_jobs(raw, seen)
 
