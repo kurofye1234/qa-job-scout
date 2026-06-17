@@ -84,15 +84,18 @@ log = logging.getLogger("qa_scout")
 
 TITLE_INCLUDE = [
     "qa",
+    "qa engineer",
+    "quality engineer",
     "quality assurance",
     "quality analyst",
-    "quality engineer",
+    "qa analyst",
+    "software test",
+    "software tester",
     "tester",
-    "manual tester",
-    "manual qa",
     "test engineer",
     "test analyst",
-    "software test",
+    "manual tester",
+    "manual qa",
     "qe"
 ]
 
