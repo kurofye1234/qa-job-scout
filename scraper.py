@@ -484,7 +484,7 @@ def filter_jobs(raw, seen):
         )
 
         if not salary_ok(salary):
-    		continue
+            continue
 
         match = calculate_match(
             j.get("title", ""),
