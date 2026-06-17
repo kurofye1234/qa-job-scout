@@ -145,6 +145,16 @@ LOCATION_EXCLUDE = [
     "emea"
 ]
 
+ALLOWED_LOCATIONS = [
+    "remote",
+    "worldwide",
+    "latin america",
+    "latam",
+    "mexico",
+    "mexican",
+    "global"
+]
+
 PROFILE_KEYWORDS = {
     "api testing": 12,
     "postman": 12,
@@ -205,8 +215,12 @@ def ok_title(title):
     )
 
 def ok_location(location, desc):
+
     text = f"{location} {desc}".lower()
-    return not any(x in text for x in LOCATION_EXCLUDE)
+    return any(
+        x in text
+        for x in ALLOWED_LOCATIONS
+    )
 
 def extract_salary(text):
 
