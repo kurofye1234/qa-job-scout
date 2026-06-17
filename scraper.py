@@ -88,8 +88,6 @@ TITLE_INCLUDE = [
     "qa",
     "quality",
     "tester",
-    "testing",
-    "test",
     "quality assurance",
     "quality engineer",
     "qa engineer",
@@ -143,6 +141,18 @@ LOCATION_EXCLUDE = [
     "spain only",
     "europe only",
     "emea"
+]
+
+LOCATION_BLOCKLIST = [
+    "germany",
+    "australia",
+    "india",
+    "brazil",
+    "philippines",
+    "poland",
+    "italy",
+    "united kingdom",
+    "uk",
 ]
 
 ALLOWED_LOCATIONS = [
@@ -217,10 +227,10 @@ def ok_title(title):
 def ok_location(location, desc):
 
     text = f"{location} {desc}".lower()
-    return any(
-        x in text
-        for x in ALLOWED_LOCATIONS
-    )
+    if any(x in text for x in LOCATION_BLOCKLIST):
+
+        return False
+    return True
 
 def extract_salary(text):
 
@@ -496,6 +506,7 @@ def filter_jobs(raw, seen):
 
         if not ok_title(j.get("title", "")):
             continue
+        log.info(f"PASSED TITLE FILTER: {j.get('title','')}")
 
         if not ok_location(
             j.get("location", ""),
