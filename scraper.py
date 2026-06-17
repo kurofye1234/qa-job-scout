@@ -435,7 +435,7 @@ def send_email(jobs):
             log.info("Email sent")
 
     except Exception as e:
-        log.error(f"EMAIL ERROR: {repr{e}}")
+        log.error(f"EMAIL ERROR: {repr(e)}")
 
 # ------------------------------------------------------------------
 # MAIN
