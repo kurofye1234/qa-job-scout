@@ -385,7 +385,7 @@ def fetch_arbeitnow():
 def fetch_remoteok():
     log.info("Fetching RemoteOK...")
     try:
-        data = json.loads(http_get("https://remoteok.com/api"))
+        data = json.loads(http_get("https://remoteok.com/api?tag=qa"))
         jobs = []
         for j in data:
             if not isinstance(j, dict):
@@ -433,7 +433,7 @@ def fetch_rss():
     log.info("Fetching RSS feeds...")
     feeds = [
         ("https://remotive.com/remote-jobs/qa/feed", "Remotive RSS"),
-        ("https://weworkremotely.com/categories/remote-programming-jobs.rss", "WeWorkRemotely"),
+        ("https://weworkremotely.com/remote-jobs/search?term=qa.rss", "WeWorkRemotely QA"),
     ]
     jobs = []
     for url, source in feeds:
