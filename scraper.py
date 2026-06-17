@@ -457,10 +457,8 @@ def fetch_rss():
             jobs.extend(rss_jobs)
         except Exception as e:
             log.error(
-                f"RSS ERROR [{source}]: {repr(e)}"
-            )
-
-    return jobs
+                f"RSS ERROR [{source}]: {repr(e)}")
+        return jobs
 
 # ------------------------------------------------------------------
 # PIPELINE
