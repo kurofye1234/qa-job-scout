@@ -428,7 +428,8 @@ def fetch_remotive():
                 "salary": str(j.get("salary", "")),
                 "source": "Remotive"
             }
-            for j in data.get("jobs", [])
+            for j in data.get("jobs", [])[:20]:
+                log.info(f"REMOTIVE RAW: {j.get('title','')}")
         ]
 
     except Exception:
@@ -503,6 +504,14 @@ def filter_jobs(raw, seen):
 
         if job_id in seen:
             continue
+        if "qa" in j.get("title","").lower():
+            log.info(f"QA DETECTED: {j.get('title','')}")
+        
+        if "quality" in j.get("title","").lower():
+            log.info(f"QUALITY DETECTED: {j.get('title','')}")
+
+        if "test" in j.get("title","").lower():
+            log.info(f"QUALITY DETECTED: {j.get('title','')}")
 
         if not ok_title(j.get("title", "")):
             log.info(f"REJECT TITLE: {j.get('title','')}")
