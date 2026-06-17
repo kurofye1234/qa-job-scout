@@ -462,7 +462,7 @@ def main():
     log.info("Filtering jobs...")
 
     for j in raw:
-    log.info(f"RAW: {j.get('title','')} | {j.get('location','')}")
+    	log.info(f"RAW: {j.get('title','')} | {j.get('location','')}")
 
     jobs = filter_jobs(raw, seen)
 
