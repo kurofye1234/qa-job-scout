@@ -425,13 +425,21 @@ def main():
 
     seen = load_seen()
 
-    raw = (
-        fetch_remotive()
-        + fetch_jobicy()
-        + fetch_rss()
-    )
+    log.info("Starting Remotive...")
+    r1 = fetch_remotive()
+    log.info(f"Remotive returned {len(r1)} jobs")
+    log.info("Starting Jobicy...")
+    r2 = fetch_jobicy()
+    log.info(f"Jobicy returned {len(r2)} jobs")
+    log.info("Starting RSS...")
+    r3 = fetch_rss()
+    log.info(f"RSS returned {len(r3)} jobs")
+
+    raw = r1 + r2 + r3
+    log.info("Filtering jobs...")
 
     jobs = filter_jobs(raw, seen)
+    log.info(f"Found {len(jobs)} matching jobs")
 
     send_email(jobs)
 
