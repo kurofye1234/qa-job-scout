@@ -418,6 +418,9 @@ def fetch_remotive():
             )
         )
 
+        for j in data.get("jobs", [])[:20]:
+            log.info(f"REMOTIVE RAW: {j.get('title','')}")
+
         return [
             {
                 "title": j.get("title", ""),
@@ -428,11 +431,11 @@ def fetch_remotive():
                 "salary": str(j.get("salary", "")),
                 "source": "Remotive"
             }
-            for j in data.get("jobs", [])[:20]:
-                log.info(f"REMOTIVE RAW: {j.get('title','')}")
+            for j in data.get("jobs", [])
         ]
 
-    except Exception:
+    except Exception as e:
+        log.error(f"REMOTIVE ERROR: {e}")
         return []
 
 def fetch_jobicy():
